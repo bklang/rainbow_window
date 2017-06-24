@@ -5,7 +5,7 @@
 
 CRGB leds[4];
 int hue = 0;
-int counter = 0;
+unsigned long counter = 0;
 
 void setup() {
   // Pins 2,3,4 = Strip 1: R,G,B
@@ -27,7 +27,7 @@ void setup() {
 }
 
 #if DEBUG_WIRING
-int debug, color, strip = 0;
+int color, strip = 0;
 #endif
 
 void loop() {
@@ -77,9 +77,11 @@ void draw() {
 }
 
 #if DEBUG_WIRING
+// Flashes each channel in sequence, changing every 2 seconds.
+// Useful for troubleshooting wiring problems.
 void debug_wiring_loop() {
-  if (debug > 1000) {
-    debug = 0;
+  if ((millis() - counter) > 2000) {
+    counter = millis();
 
     color++;
     if (color > 2) {
@@ -109,7 +111,6 @@ void debug_wiring_loop() {
     leds[0].b = leds[1].b = leds[2].b = leds[3].b = 0;
     leds[strip].b = 255;
   }
-  debug++;
   draw();
   return;
 }
